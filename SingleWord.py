@@ -12,7 +12,7 @@ from wordcloud import WordCloud
 
 text = "Good"
 
-x, y = np.ogrid[:300, :300]
+x, y = np.ogrid[0:300, 0:300]
 
 mask = (x - 150) ** 2 + (y - 150) ** 2 > 130 ** 2
 mask = 255 * mask.astype(int)
