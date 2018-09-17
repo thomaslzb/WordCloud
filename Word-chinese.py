@@ -22,32 +22,34 @@ def jieba_processing_txt(text):
     return keywords
 
 # get data directory (using getcwd() is needed to support running example in generated IPython notebook)
-d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
-
-stopwords_path = d + '/files/stopwords.txt'
+d = path.dirname(__file__)+'/files' if "__file__" in locals() else os.getcwd()
 
 # Chinese fonts must be set 这个字库必须要
-font_path = d + '/files/fonts/SourceHanSerifK-Light.otf'
-
-# the path to save worldcloud
-imgname1 = d + '/files/LuXun.jpg'
-imgname2 = d + '/files/LuXun_colored.jpg'
+font_path = d + '/fonts/SourceHanSerifK-Light.otf'
+original_img = d + '/luxun_color.jpg'
+original_txt = d + '/luxun_book.txt'
 
 #files is exist?
-if not (os.path.isfile(stopwords_path) and os.path.isfile(font_path) and \
-        os.path.isfile(imgname1) ) :
+if not (os.path.isfile(font_path) and os.path.isfile(original_img) \
+                and  os.path.isfile(original_txt)) :
     if not os.path.isfile(stopwords_path):
         print ("stopwords_path or pngFile does not found!")
     if not os.path.isfile(font_path):
         print ("font_path or pngFile does not found!")
     if not os.path.isfile(imgname1):
-        print ("imgname1 or pngFile does not found!")
+        print ("original img or pngFile does not found!")
     os._exit(0)
 
+# the path to save worldcloud
+imgname1 = d + '/LuXun.jpg'
+imgname2 = d + '/LuXun_colored.jpg'
+
 # read the mask / color image taken from
-back_coloring = imread(path.join(d, d + '/files/luxun_color.jpg'))
-txt_book = path.join(d, d + '/files/luxun_book.txt')
-# Read the whole text. ‘rb’文件以二进制的方式读入
+
+back_coloring = imread(path.join(d, original_img))
+txt_book = path.join(original_txt)
+
+#  Read the whole text. ‘rb’文件以二进制的方式读入
 text = open(txt_book, 'rb').read()
 
 wc = WordCloud(font_path=font_path, background_color="white", max_words=2000, mask=back_coloring,
@@ -62,7 +64,7 @@ wc.generate_from_frequencies(jieba_processing_txt(text))
 image_colors_default = ImageColorGenerator(back_coloring)
 
 # save wordcloud
-wc.to_file(path.join(d, imgname2))
+wc.to_file(path.join(d, imgname1))
 
 # recolor wordcloud and show
 plt.figure()
@@ -81,6 +83,9 @@ image_colors_byImg = ImageColorGenerator(back_coloring)
 plt.figure()
 plt.imshow(wc.recolor(color_func=image_colors_byImg), interpolation="bilinear")
 plt.axis("off")
+
+# save wordcloud
+wc.recolor(color_func=image_colors_byImg).to_file(path.join(d, imgname2))
 
 plt.show()
 
