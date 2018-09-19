@@ -50,7 +50,8 @@ back_coloring = imread(path.join(d, original_img))
 txt_book = path.join(original_txt)
 
 #  Read the whole text. ‘rb’文件以二进制的方式读入
-text = open(txt_book, 'rb').read()
+with open(txt_book, 'rb') as f:
+    text = f.read()
 
 wc = WordCloud(font_path=font_path, background_color="white", max_words=2000, mask=back_coloring,
                max_font_size=100, random_state=42, width=1000, height=860, margin=2,)
